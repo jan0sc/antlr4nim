@@ -1,3 +1,5 @@
+## antlr4nim listener example
+
 import antlr4nim, jsffi, strutils
 
 var width = 0
@@ -8,7 +10,7 @@ var output = ""
 proc doOutput =
   echo output
 
-antlr:
+listener "CSV":
   enter:
     proc row =
       output &= "|"                         # each row starts with |

@@ -15,17 +15,17 @@ You know that the [ANTLR4](https://www.antlr.org/) parser generator makes it pos
 You also know that [Nim](https://nim-lang.org/) is an expressive general-purpose language that
 
 * compiles to efficient C, C++ or JavaScript code.
-* has powerful metaprogramming tools that will make it easier to write a compiler/interpreter for your new language.
+* has powerful metaprogramming tools that will make it much easier to write a compiler for your new language.
 
 You want to use both together? Of course you do. But ANTLR4 has no Nim target :(
 
 Fortunately, Nim has good interops with JavaScript. **antlr4nim** is a module to support an ANTLR4/Nim workflow, using Nim's [JavaScript FFI](https://nim-lang.org/docs/jsffi.html). 
 
-A similar approach should be possible for the C++ ANTLR4 target, but unfortuately [c2nim](https://github.com/nim-lang/c2nim) doesn't like the header files that ANTLR4 generates. My C++ experience is zero so I would be very happy to receive pull requests on this.
+*A similar approach should be possible for the C++ ANTLR4 target, but unfortuately [c2nim](https://github.com/nim-lang/c2nim) doesn't like the header files that ANTLR4 generates. My C++ experience is zero so I would be very happy to receive a PR on this issue :)*
 
 ## How does it work?
 Parsing is executed on the JavaScript side, using the default listener/visitor code that ANTLR4 generates for you. You override the default behaviour with custom methods in Nim that will be bound to your listener/visitor object.
-A basic JavaScript entry point will be generated for you, which you can edit as needed.
+A basic JavaScript entry point is provided, which you can modify to your own needs.
 
 The `antlr` macro generates the proc that performs the bindings. 
 
@@ -121,7 +121,7 @@ Insert procs within the macro blocks to associate them with the parsing events *
 
 The ANTLR4 context object will be passed to your proc as `ctx`, and you have access to its methods and properties in the same way as you would have on the JS side. All JS objects have type `JsObject` so need conversions before they can be used in Nim.
 
-The proc `txt` provides a shorthand for the text content of a node, as a Nim string. `x.txt` means `$(x.getText().to(cstring))`.
+
 
 
 
@@ -217,6 +217,8 @@ antlr:
 ```
 The procs for parse tree nodes need to be named with the identifiers taken from the .g4 file. It's fine to have both an *enter* and an *exit* proc with the same name: the macros are going to rename everything.
 
+The proc `txt` provides a shorthand for the text content of a node, as a Nim string. `x.txt` means `$(x.getText().to(cstring))`.
+
 Note that the Nim listener is responsible for creating its own output. It won't be able to return anything to the JS side.
 
 When I run `nim js myCSVListener.nim`, the macros convert it to
@@ -306,9 +308,79 @@ Finally, we run the listener with `node runMyCSVListener.mjs example.csv csvFile
 |2004/10/04|Randel Helms|0879755725|4.50|
 
 ## Visitor Example
-For our visitor example, we will find the total of all monetary values contained in the table.
+An ANTLR visitor is more complicated than a listener:
 
+* The `visit` method can return something.
+* The order of visits isn't fixed, but needs to be handled by the visitor.
 
+Visitors can be useful to construct an AST from the parse tree, because the visitor can define a `visit` method for each different node type, which will construct and return the node's representation.
+
+For our visitor example, we will construct a `Book` object for each row of the table.
+
+Here is `myCSVVisitor.nim`:
+
+```
+## antlr4nim visitor example
+
+import antlr4nim, jsffi, jsre, strutils, times, strformat, algorithm
+
+var dateFormat = initTimeFormat("yyyy/MM/dd")
+var moneyFormat = newRegExp(r"^\d+\.\d\d$", r"")
+
+type Book = object
+  author, isbn: string
+  reviewDate: DateTime
+  discountedPrice: float
+
+var library = newSeq[Book](0)
+
+proc addToLibrary( newBooks: seq[Book] ) =
+  library &= newBooks
+  echo "You added the following books to the library:"
+  for b in newBooks.sortedByIt(it.isbn):
+    echo &"{b.isbn} ({b.author})"
+
+antlr:
+  visit:
+    proc csvFile =
+      var books = newSeq[Book](0)
+      for x in this.visitChildren(ctx):         # get the result from each child node
+        if( x != nil ):                         # exclude any rows that return nil
+          books &= x.to(Book)
+      addToLibrary( books )
+    proc hdr =
+      return nil                                # the header row returns nil
+    proc row =
+      var b = Book(                             # construct a new Book object for this row
+        author: $( this.visit(ctx.field(1)) ),  # get the result from a specific node
+        isbn: $( this.visit(ctx.field(2)) ),
+        reviewDate: parse( $( this.visit(ctx.field(0)) ), dateFormat ),
+        discountedPrice: this.visit(ctx.field(3)).to(float)
+      )
+      return b.toJs                         # return the Book
+    proc field =
+      var x = ctx.txt
+      if( ctx.STRING() != nil ):                                # if the node contains a STRING:
+        x = x[ 1 .. ^2 ]                                        #   remove outside " "
+        x = x.replace("\"\"","\"")                              #   replace "" with "
+      elif( test( moneyFormat, ctx.getText().to(cstring) ) ):   # else if the node text is an amount:
+          return parseFloat(x).toJs                             #   return a float
+      return x.toJs                                             # return a string
+```
+
+The variable `this` refers to the visitor itself.
+The variable `ctx` is the ANTLR context object, as in the listener example.
+
+The *default* `visit` method provided by `CSVVisitor.mjs` for every node is `return( this.visitChildren(ctx) )`. 
+If we override a `visit` method then we are responsible for calling any further nodes, using `this.visitChildren(ctx)` or `this.visit(childCtx)`.
+
+We need to be careful with type handling, because all of the visit methods will return a `JsObject`.
+Wrap a Nim object to a JsObject with `x.toJs`
+Unwrap a JsObject with x.to(type)
+Unwrap a JsObject to a cstring (i.e. a JS String) to use with a jsre regex, as in the example.
+To unwrap a JsObject and convert to a string (i.e. a Nim String), use the shorthand $( x )
+
+`this.visitChildren(ctx)` returns a collection wrapped as a single JsObject - you can iterate this directly or convert to a seq[JsObject] using `toSeq` from `sequtils`.
 
 ## Wait, I still don't understand!
 There's a lot of bits and pieces here, but here's some further reading that might help:
@@ -316,16 +388,16 @@ There's a lot of bits and pieces here, but here's some further reading that migh
 ### ANTLR4
 * You can learn all the necessary parts of ANTLR4 from the [mega-tutorial](https://tomassetti.me/antlr-mega-tutorial/).
 * There is also [the documentation](https://github.com/antlr/antlr4/blob/master/doc/index.md).
-* The [ANTLR4 Runtime API](https://www.antlr.org/api/Java/index.html) can be helpful in understanding what you can do with the context object. Remember that you can [label alternatives](https://github.com/antlr/antlr4/blob/master/doc/parser-rules.md#alternative-labels) in your grammar to get more specific enter/exit/visit events.
+* The [ANTLR4 Runtime API](https://www.antlr.org/api/Java/index.html) can be helpful in understanding what you can do with the [context object](https://www.antlr.org/api/Java/org/antlr/v4/runtime/ParserRuleContext.html). Remember that you can [label alternatives](https://github.com/antlr/antlr4/blob/master/doc/parser-rules.md#alternative-labels) in your grammar to get more specific enter/exit/visit events.
 * [This blogpost](https://saumitra.me/blog/antlr4-visitor-vs-listener-pattern/) might help you to decide between the listener and the visitor pattern.
 
 ### Nim
 * If you're new to Nim, [Nim basics](https://narimiran.github.io/nim-basics/) is a great beginners' tutorial.
 * The [official tutorial](https://nim-lang.org/docs/tut1.html) has extensions that explain [OOP](https://nim-lang.org/docs/tut2.html#object-oriented-programming), [templates](https://nim-lang.org/docs/tut2.html#templates) and [macros](https://nim-lang.org/docs/tut3.html).
 * There is documentation for the [jsffi](https://nim-lang.org/docs/jsffi.html) and [macros](https://nim-lang.org/docs/macros.html) packages.
-* Metaprogramming in Nim consists of constructing an AST, which you can then execute or output as Nim code. You will probably want to work with the `dumpTree` and `dumpAstGen` macros to construct code that correctly builds your AST, and the `repr` proc to check it. Here's a few examples:
+* Metaprogramming in Nim consists of constructing an AST, which you can then execute or output as Nim code. You will probably want to work with the `dumpTree` and `dumpAstGen` macros to construct code that correctly builds your AST, and the `repr` proc to check it. Here are a few examples:
 	* [Building a brainfuck interpreter and compiler](https://howistart.org/posts/nim/1/) (very helpful)
-	* [Nim by Example / Macros](https://nim-by-example.github.io/macros/)
+	* [Nim by Example](https://nim-by-example.github.io/macros/)
 	* [Introduction to Metaprogramming in Nim](https://hookrace.net/blog/introduction-to-metaprogramming-in-nim/)
 	* [Demystification of Macros in Nim](https://dev.to/beef331/demystification-of-macros-in-nim-13n8)
 
@@ -334,5 +406,5 @@ There's a lot of bits and pieces here, but here's some further reading that migh
 
 ## Credits
 
-The code to export a proc to JS is taken from an answer on [Stack Overflow](https://stackoverflow.com/a/62728515).
+The code to export a symbol to JS is taken from an answer on [Stack Overflow](https://stackoverflow.com/a/62728515).
 
