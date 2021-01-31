@@ -6227,7 +6227,7 @@ function HEX24_10755023(x_10755025) {
   var F={procname:"antlr4nim.$",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
   BeforeRet: do {
-    F.line = 111;
+    F.line = 96;
     result_10755026 = nimCopy(null, cstrToNimstr((x_10755025)), NTI1188013);
     break BeforeRet;
   } while (false);
@@ -8487,19 +8487,19 @@ function visitRow_12135040(this_12135042, ctx_12135043) {
   return result_12135044;
 
 }
-function txt_10750078(x_10750080) {
-  var result_10750081 = [];
+function txt_10750070(x_10750072) {
+  var result_10750073 = [];
 
   var F={procname:"antlr4nim.txt",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
   BeforeRet: do {
-    F.line = 107;
-    result_10750081 = nimCopy(null, cstrToNimstr((x_10750080.getText())), NTI1188013);
+    F.line = 92;
+    result_10750073 = nimCopy(null, cstrToNimstr((x_10750072.getText())), NTI1188013);
     break BeforeRet;
   } while (false);
   framePtr = F.prev;
 
-  return result_10750081;
+  return result_10750073;
 
 }
 function nsuFindChar(s_10365216, sub_10365217, start_10365218, last_10365219) {
@@ -8858,7 +8858,7 @@ function visitField_12255029(this_12255031, ctx_12255032) {
   framePtr = F;
   BeforeRet: do {
     F.line = 41;
-    var x_12255034 = txt_10750078(ctx_12255032);
+    var x_12255034 = txt_10750070(ctx_12255032);
     if (!((ctx_12255032.STRING() == null))) {
     F.line = 43;
     x_12255034 = nimCopy(null, HEX5BHEX5D_6140068(x_12255034, HEX2EHEX2E_6140001(1, 2)), NTI1188013);
@@ -8948,7 +8948,7 @@ function bindVisitMethods_12280018(this_12280020) {
 function bindMethods_12320027(thisHEX60gensym6_12320029) {
   var F={procname:"myCSVVisitor.bindMethods",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
-    F.line = 38;
+    F.line = 29;
     bindVisitMethods_12280018(thisHEX60gensym6_12320029);
   framePtr = F.prev;
 
@@ -8956,11 +8956,11 @@ function bindMethods_12320027(thisHEX60gensym6_12320029) {
 }
 var F={procname:"module myCSVVisitor",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVVisitor.nim",line:0};
 framePtr = F;
-F.line = 39;
+F.line = 30;
 module.exports.bindMethods = bindMethods_12320027;
-F.line = 40;
-module.exports.grammar = ("CSV");
 F.line = 31;
+module.exports.grammar = ("CSV");
+F.line = 26;
 module.exports.type = ("visitor");
 framePtr = F.prev;
 var F={procname:"module myCSVVisitor",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVVisitor.nim",line:0};

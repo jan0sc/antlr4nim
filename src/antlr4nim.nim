@@ -6,10 +6,8 @@ import macros, jsffi, strutils, sequtils
 var module* {.importc.}: JsObject
 
 
-## Core ANTLR4 macros
-
-macro listener*( grammar: string, body: untyped) =
-  ## Declares an ANTLR block containing bindable methods
+macro listener*( grammar: string, body: untyped ) =
+  ## Declares an ANTLR listener block
   result = newStmtList(body)
   result.add quote do:
     proc bindMethods( this: JsObject ) =
@@ -17,33 +15,24 @@ macro listener*( grammar: string, body: untyped) =
         bindEnterMethods( this )
       when declared( bindExitMethods ):
         bindExitMethods( this )
-      when declared( bindVisitMethods ):
-        bindVisitMethods( this )
     module.exports.bindMethods = bindMethods
     module.exports.grammar = `grammar`.toJs
     module.exports.type = "listener".toJs
-  echo result.repr
 
 
-macro visitor*( grammar: string, body: untyped) =
-  ## Declares an ANTLR block containing bindable methods
+macro visitor*( grammar: string , body: untyped) =
+  ## Declares an ANTLR visitor block
   result = newStmtList(body)
   result.add quote do:
     proc bindMethods( this: JsObject ) =
-      when declared( bindEnterMethods ):
-        bindEnterMethods( this )
-      when declared( bindExitMethods ):
-        bindExitMethods( this )
       when declared( bindVisitMethods ):
         bindVisitMethods( this )
     module.exports.bindMethods = bindMethods
     module.exports.grammar = `grammar`.toJs
     module.exports.type = "visitor".toJs
-  echo result.repr
 
 
 template antlrBlock*( blockName: string, returnType: string, body: untyped) =
-#  echo(body.repr)
   var bindings = newStmtList()
   result = newStmtList()
   for node in body.children:
@@ -83,23 +72,19 @@ template antlrBlock*( blockName: string, returnType: string, body: untyped) =
   var procname = "bind" & blockName.capitalizeAscii & "Methods"
   var bindMs = newProc( ident(procname), @[newEmptyNode(),newIdentDefs(ident("this"),ident("JsObject"))], bindings )
   result.add bindMs
-#  echo result.repr
 
 
 macro enter*( body: untyped) =
   ## Declares an ANTLR subblock containing "enter" methods
   antlrBlock("enter", "void", body)
-  echo(result.repr)
 
 macro exit*( body: untyped) =
   ## Declares an ANTLR subblock containing "exit" methods
   antlrBlock("exit", "void", body)
-  echo(result.repr)
 
 macro visit*( body: untyped) =
   ## Declares an ANTLR subblock containing "visit" methods
   antlrBlock("visit", "JsObject", body)
-  echo(result.repr)
 
 
 proc txt*( x: JsObject ): string =

@@ -1,4 +1,6 @@
 
+// antlr4nim basic Node.js entry point
+
 import fs from 'fs';
 import antlr4 from 'antlr4';
 
@@ -38,7 +40,6 @@ function listen( grammar, nimListener, href, start ){
       var listener = new ANTLRListener.default();
       nimListener.bindMethods( listener );
       antlr4.tree.ParseTreeWalker.DEFAULT.walk( listener, tree );
-      //console.log( "complete!" )
     });
   });
 }
@@ -49,23 +50,19 @@ function visit( grammar, nimVisitor, href, start ){
       var visitor = new ANTLRVisitor.default();
       nimVisitor.bindMethods( visitor );
       let result = tree.accept( visitor )
-      //console.log( result );
-      //console.log( "complete!" )
     });
   });
 }
 
+
 if(process.argv.length<5) {
-  console.log("usage:")
+  console.log("Usage: node runAntlr.mjs <myParser>.js <inputFile> <startNode>")
 }
 else {
   let fname = process.argv[2]
   import("./" + fname).then((nimVisitor) => {
-    //console.log( "antlr4nim (" + fname  + ")")
     let grammar = nimVisitor.grammar;
-    //console.log( "using grammar: " + grammar )
     let type = nimVisitor.type;
-    //console.log( "type: " + type )
     let href = process.argv[3];
     let start = process.argv[4];
     if( type == "listener"){

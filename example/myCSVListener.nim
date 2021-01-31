@@ -10,10 +10,13 @@ var output = ""
 proc doOutput =
   echo output
 
+
 listener "CSV":
+
   enter:
     proc row =
       output &= "|"                         # each row starts with |
+
   exit:
     proc csvFile =
       doOutput()                            # finished! call output proc

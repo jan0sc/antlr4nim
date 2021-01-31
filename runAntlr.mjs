@@ -1,9 +1,8 @@
 
+// antlr4nim basic Node.js entry point
+
 import fs from 'fs';
 import antlr4 from 'antlr4';
-//import CSVLexer from './CSVLexer.mjs';
-//import CSVParser from './CSVParser.mjs';
-//import CSVVisitor from './CSVVisitor.mjs';
 
 var grammar = "";
 
@@ -35,25 +34,42 @@ function loadTree(grammar, href, start){
     });
 }
 
+function listen( grammar, nimListener, href, start ){
+  loadTree( grammar, href, start ).then((tree) => {
+    import("./" + grammar + "Listener.mjs").then((ANTLRListener) => {
+      var listener = new ANTLRListener.default();
+      nimListener.bindMethods( listener );
+      antlr4.tree.ParseTreeWalker.DEFAULT.walk( listener, tree );
+    });
+  });
+}
+
 function visit( grammar, nimVisitor, href, start ){
   loadTree( grammar, href, start ).then((tree) => {
     import("./" + grammar + "Visitor.mjs").then((ANTLRVisitor) => {
       var visitor = new ANTLRVisitor.default();
       nimVisitor.bindMethods( visitor );
-      tree.accept( visitor );
+      let result = tree.accept( visitor )
     });
   });
 }
 
+
 if(process.argv.length<5) {
-  console.log("usage:")
+  console.log("Usage: node runAntlr.mjs <myParser>.js <inputFile> <startNode>")
 }
 else {
-  import("./"+process.argv[2]).then((nimVisitor) => {
-    console.log( nimVisitor.grammar )
+  let fname = process.argv[2]
+  import("./" + fname).then((nimVisitor) => {
     let grammar = nimVisitor.grammar;
+    let type = nimVisitor.type;
     let href = process.argv[3];
     let start = process.argv[4];
-    visit( grammar, nimVisitor, href, start );
+    if( type == "listener"){
+      listen( grammar, nimVisitor, href, start );
+    }
+    else if( type == "visitor"){
+      visit( grammar, nimVisitor, href, start );
+    }
   });
 }

@@ -3058,7 +3058,7 @@ framePtr = F.prev;
 function enterRow_10765001(this_10765003, ctx_10765004) {
   var F={procname:"myCSVListener.enterRow",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
-    F.line = 16;
+    F.line = 18;
     output_10756017[0].push.apply(output_10756017[0], makeNimstrLit("|"));;
   framePtr = F.prev;
 
@@ -3068,7 +3068,7 @@ function bindEnterMethods_10765018(this_10765020) {
     function HEX3Aanonymous_10770001(ctx_10770003) {
       var F={procname:"bindEnterMethods.:anonymous",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVListener.nim",line:0};
       framePtr = F;
-        F.line = 16;
+        F.line = 18;
         enterRow_10765001(this, ctx_10770003);
       framePtr = F.prev;
 
@@ -3077,7 +3077,7 @@ function bindEnterMethods_10765018(this_10765020) {
 
   var F={procname:"myCSVListener.bindEnterMethods",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
-    F.line = 16;
+    F.line = 18;
     this_10765020.enterRow = HEX3Aanonymous_10770001;
   framePtr = F.prev;
 
@@ -3106,7 +3106,7 @@ function doOutput_10756031() {
 function exitCsvFile_10780001(this_10780003, ctx_10780004) {
   var F={procname:"myCSVListener.exitCsvFile",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
-    F.line = 19;
+    F.line = 22;
     doOutput_10756031();
   framePtr = F.prev;
 
@@ -3279,12 +3279,12 @@ function checkOverflowInt(a_1460403) {
 function exitHdr_10780018(this_10780020, ctx_10780021) {
   var F={procname:"myCSVListener.exitHdr",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
-    F.line = 21;
+    F.line = 24;
     finishedHeader_10756016[0] = true;
-    F.line = 22;
+    F.line = 25;
     output_10756017[0].push.apply(output_10756017[0], makeNimstrLit("|"));;
     L1: do {
-      F.line = 23;
+      F.line = 26;
       var i_10780030 = 0;
       F.line = 77;
       var res_10880028 = 1;
@@ -3292,16 +3292,16 @@ function exitHdr_10780018(this_10780020, ctx_10780021) {
         F.line = 78;
           L3: while (true) {
           if (!(res_10880028 <= width_10756015[0])) break L3;
-            F.line = 23;
+            F.line = 26;
             i_10780030 = res_10880028;
-            F.line = 23;
+            F.line = 26;
             output_10756017[0].push.apply(output_10756017[0], makeNimstrLit("---|"));;
             F.line = 80;
             res_10880028 = addInt(res_10880028, 1);
           }
       } while(false);
     } while(false);
-    F.line = 24;
+    F.line = 27;
     output_10756017[0].push.apply(output_10756017[0], makeNimstrLit("\x0A"));;
   framePtr = F.prev;
 
@@ -3310,25 +3310,25 @@ function exitHdr_10780018(this_10780020, ctx_10780021) {
 function exitRow_10780044(this_10780046, ctx_10780047) {
   var F={procname:"myCSVListener.exitRow",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
-    F.line = 26;
+    F.line = 29;
     addChar(output_10756017[0], 10);;
   framePtr = F.prev;
 
   
 }
-function txt_10750078(x_10750080) {
-  var result_10750081 = [];
+function txt_10750070(x_10750072) {
+  var result_10750073 = [];
 
   var F={procname:"antlr4nim.txt",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
   BeforeRet: do {
-    F.line = 107;
-    result_10750081 = nimCopy(null, cstrToNimstr((x_10750080.getText())), NTI1188013);
+    F.line = 92;
+    result_10750073 = nimCopy(null, cstrToNimstr((x_10750072.getText())), NTI1188013);
     break BeforeRet;
   } while (false);
   framePtr = F.prev;
 
-  return result_10750081;
+  return result_10750073;
 
 }
 function raiseRangeError() {
@@ -3699,22 +3699,22 @@ function exitField_10785014(this_10785016, ctx_10785017) {
   var F={procname:"myCSVListener.exitField",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
     if (!((ctx_10785017.STRING() == null))) {
-    F.line = 29;
-    var x_10795012 = txt_10750078(ctx_10785017);
-    F.line = 30;
-    x_10795012 = nimCopy(null, HEX5BHEX5D_6140068(x_10795012, HEX2EHEX2E_6140001(1, 2)), NTI1188013);
-    F.line = 31;
-    x_10795012 = nimCopy(null, nsuReplaceStr(x_10795012, makeNimstrLit("\"\""), makeNimstrLit("\"")), NTI1188013);
     F.line = 32;
+    var x_10795012 = txt_10750070(ctx_10785017);
+    F.line = 33;
+    x_10795012 = nimCopy(null, HEX5BHEX5D_6140068(x_10795012, HEX2EHEX2E_6140001(1, 2)), NTI1188013);
+    F.line = 34;
+    x_10795012 = nimCopy(null, nsuReplaceStr(x_10795012, makeNimstrLit("\"\""), makeNimstrLit("\"")), NTI1188013);
+    F.line = 35;
     output_10756017[0].push.apply(output_10756017[0], (x_10795012 || []).concat(makeNimstrLit("|") || []));;
     }
     else {
-      F.line = 34;
-    output_10756017[0].push.apply(output_10756017[0], (txt_10750078(ctx_10785017) || []).concat(makeNimstrLit("|") || []));;
+      F.line = 37;
+    output_10756017[0].push.apply(output_10756017[0], (txt_10750070(ctx_10785017) || []).concat(makeNimstrLit("|") || []));;
     }
     
     if (!(finishedHeader_10756016[0])) {
-    F.line = 35;
+    F.line = 38;
     width_10756015[0] = addInt(width_10756015[0], 1);
     }
     
@@ -3726,7 +3726,7 @@ function bindExitMethods_10800055(this_10800057) {
     function HEX3Aanonymous_10805001(ctx_10805003) {
       var F={procname:"bindExitMethods.:anonymous",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVListener.nim",line:0};
       framePtr = F;
-        F.line = 19;
+        F.line = 22;
         exitCsvFile_10780001(this, ctx_10805003);
       framePtr = F.prev;
 
@@ -3735,7 +3735,7 @@ function bindExitMethods_10800055(this_10800057) {
     function HEX3Aanonymous_10815001(ctx_10815003) {
       var F={procname:"bindExitMethods.:anonymous",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVListener.nim",line:0};
       framePtr = F;
-        F.line = 21;
+        F.line = 24;
         exitHdr_10780018(this, ctx_10815003);
       framePtr = F.prev;
 
@@ -3744,7 +3744,7 @@ function bindExitMethods_10800055(this_10800057) {
     function HEX3Aanonymous_10825001(ctx_10825003) {
       var F={procname:"bindExitMethods.:anonymous",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVListener.nim",line:0};
       framePtr = F;
-        F.line = 26;
+        F.line = 29;
         exitRow_10780044(this, ctx_10825003);
       framePtr = F.prev;
 
@@ -3753,7 +3753,7 @@ function bindExitMethods_10800055(this_10800057) {
     function HEX3Aanonymous_10835001(ctx_10835003) {
       var F={procname:"bindExitMethods.:anonymous",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVListener.nim",line:0};
       framePtr = F;
-        F.line = 28;
+        F.line = 31;
         exitField_10785014(this, ctx_10835003);
       framePtr = F.prev;
 
@@ -3762,13 +3762,13 @@ function bindExitMethods_10800055(this_10800057) {
 
   var F={procname:"myCSVListener.bindExitMethods",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
-    F.line = 19;
+    F.line = 22;
     this_10800057.exitCsvFile = HEX3Aanonymous_10805001;
-    F.line = 21;
+    F.line = 24;
     this_10800057.exitHdr = HEX3Aanonymous_10815001;
-    F.line = 26;
+    F.line = 29;
     this_10800057.exitRow = HEX3Aanonymous_10825001;
-    F.line = 28;
+    F.line = 31;
     this_10800057.exitField = HEX3Aanonymous_10835001;
   framePtr = F.prev;
 
@@ -3777,9 +3777,9 @@ function bindExitMethods_10800055(this_10800057) {
 function bindMethods_10840029(thisHEX60gensym0_10840031) {
   var F={procname:"myCSVListener.bindMethods",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
-    F.line = 17;
+    F.line = 15;
     bindEnterMethods_10765018(thisHEX60gensym0_10840031);
-    F.line = 19;
+    F.line = 17;
     bindExitMethods_10800055(thisHEX60gensym0_10840031);
   framePtr = F.prev;
 
@@ -3787,11 +3787,11 @@ function bindMethods_10840029(thisHEX60gensym0_10840031) {
 }
 var F={procname:"module myCSVListener",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVListener.nim",line:0};
 framePtr = F;
-F.line = 22;
+F.line = 18;
 module.exports.bindMethods = bindMethods_10840029;
-F.line = 23;
+F.line = 19;
 module.exports.grammar = ("CSV");
-F.line = 14;
+F.line = 12;
 module.exports.type = ("listener");
 framePtr = F.prev;
 var F={procname:"module myCSVListener",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVListener.nim",line:0};
