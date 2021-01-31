@@ -3,6 +3,7 @@
 version       = "0.1.0"
 author        = "jan0sc"
 description   = "Nim interface to ANTLR4 listener/visitor via jsffi"
+doc           = "https://jan0sc.github.io/antlr4nim.html"
 license       = "MIT"
 srcDir        = "src"
 
