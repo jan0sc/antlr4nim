@@ -1,7 +1,6 @@
-## antlr4nim
 ## Nim interface to ANTLR4 listener/visitor via jsffi
 
-import macros, jsffi, strutils, sequtils
+import macros, jsffi, strutils
 
 var module* {.importc.}: JsObject
 
