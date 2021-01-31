@@ -1,5 +1,7 @@
 # antlr4nim
- Nim interface to ANTLR4 listener/visitor via jsffi
+ Nim interface to ANTLR4 listener/visitor via jsffi. 
+ 
+ [API](https://jan0sc.github.io/antlr4nim.html)
 
 ## Who is this for?
 You have an idea for an amazing new DSL that you're itching to implement.
@@ -126,7 +128,7 @@ The ANTLR4 context object will be passed to your proc as `ctx`, and you have acc
 
 
 
-### Compile and run
+### 5. Compile and run
 ```
 nim js <myParser>.nim
 ```
