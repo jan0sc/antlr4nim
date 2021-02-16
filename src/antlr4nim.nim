@@ -2,8 +2,12 @@
 
 import macros, jsffi, strutils
 
-var module* {.importc.}: JsObject
+var module* {.importc, nodecl.}: JsObject
 
+const file {.strdefine.} = ""
+const data = staticRead(file)
+
+const start {.strdefine.} = ""
 
 macro listener*( grammar: string, body: untyped ) =
   ## Declares an ANTLR listener block
@@ -14,9 +18,40 @@ macro listener*( grammar: string, body: untyped ) =
         bindEnterMethods( this )
       when declared( bindExitMethods ):
         bindExitMethods( this )
-    module.exports.bindMethods = bindMethods
-    module.exports.grammar = `grammar`.toJs
-    module.exports.type = "listener".toJs
+  #  module.exports.bindMethods = bindMethods
+  #  module.exports.grammar = `grammar`.toJs
+  #  module.exports.type = "listener".toJs
+  result.add quote do:
+    const jantlr = """
+    import """ & `grammar` & """Lexer from "./""" & `grammar` & """Lexer.mjs";
+    import """ & `grammar` & """Parser from "./""" & `grammar` & """Parser.mjs";
+    import antlr4 from 'antlr4';
+    function getTree(data,start) {
+         var chars = new antlr4.InputStream(data);
+         var lexer = new """ & `grammar` & """Lexer(chars);
+         var tokens  = new antlr4.CommonTokenStream(lexer);
+         var parser = new """ & `grammar` & """Parser(tokens);
+         parser.buildParseTrees = true;
+         return( parser[start]() );
+    }
+    import """ & `grammar` & """Listener from "./""" & `grammar` & """Listener.mjs"
+    function getListener(){
+      return new """ & `grammar` & """Listener();
+    }
+    function getWalker(){
+      return antlr4.tree.ParseTreeWalker.DEFAULT;
+    }
+    """
+    {.emit: jantlr.}
+    proc getTree(data:cstring,start:cstring): JsObject {.importc, nodecl.}
+    proc getListener(): JsObject {.importc, nodecl.}
+    proc getWalker(): JsObject {.importc, nodecl.}
+    var tree = getTree(cstring(data),cstring(start))
+    var listnr = getListener()
+    var walker = getWalker()
+    bindMethods( listnr )
+    walker.walk( listnr, tree )
+
 
 
 macro visitor*( grammar: string , body: untyped) =
@@ -26,9 +61,34 @@ macro visitor*( grammar: string , body: untyped) =
     proc bindMethods( this: JsObject ) =
       when declared( bindVisitMethods ):
         bindVisitMethods( this )
-    module.exports.bindMethods = bindMethods
-    module.exports.grammar = `grammar`.toJs
-    module.exports.type = "visitor".toJs
+  #  module.exports.bindMethods = bindMethods
+  #  module.exports.grammar = `grammar`.toJs
+  #  module.exports.type = "visitor".toJs
+  result.add quote do:
+    const jantlr = """
+    import """ & `grammar` & """Lexer from "./""" & `grammar` & """Lexer.mjs";
+    import """ & `grammar` & """Parser from "./""" & `grammar` & """Parser.mjs";
+    import antlr4 from 'antlr4';
+    function getTree(data,start) {
+         var chars = new antlr4.InputStream(data);
+         var lexer = new """ & `grammar` & """Lexer(chars);
+         var tokens  = new antlr4.CommonTokenStream(lexer);
+         var parser = new """ & `grammar` & """Parser(tokens);
+         parser.buildParseTrees = true;
+         return( parser[start]() );
+    }
+    import """ & `grammar` & """Visitor from "./""" & `grammar` & """Visitor.mjs"
+    function getVisitor(){
+      return new """ & `grammar` & """Visitor();
+    }
+    """
+    {.emit: jantlr.}
+  #  proc getTree(data:cstring,start:cstring): JsObject {.importc, nodecl.}
+  #  proc getVisitor(): JsObject {.importc, nodecl.}
+  #  var tree = getTree(data,start)
+  #  var vistr = getVisitor()
+  #  bindMethods( vistr )
+  #  tree.accept( vistr )
 
 
 template antlrBlock*( blockName: string, returnType: string, body: untyped) =

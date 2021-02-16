@@ -1,13 +1,13 @@
 ## antlr4nim visitor example
 
-import antlr4nim, jsffi, jsre, strutils, times, strformat, algorithm
+import  times, antlr4nim, jsffi, jsre, strutils, strformat, algorithm
 
-var dateFormat = initTimeFormat("yyyy/MM/dd")
-var moneyFormat = newRegExp(r"^\d+\.\d\d$", r"")
+#let dateFormat = initTimeFormat("yyyy/MM/dd")
+#let moneyFormat = newRegExp(r"^\d+\.\d\d$", r"")
 
 type Book = object
   author, isbn: string
-  reviewDate: DateTime
+#  reviewDate: DateTime
   discountedPrice: float
 
 var library = newSeq[Book](0)
@@ -33,7 +33,7 @@ visitor "CSV":
       var b = Book(                             # construct a new Book object for this row
         author: $( this.visit(ctx.field(1)) ),  # get the result from a specific node
         isbn: $( this.visit(ctx.field(2)) ),
-        reviewDate: parse( $( this.visit(ctx.field(0)) ), dateFormat ),
+  #    reviewDate: parse( $( this.visit(ctx.field(0)) ), dateFormat ),
         discountedPrice: this.visit(ctx.field(3)).to(float)
       )
       return b.toJs                         # return the Book
@@ -42,6 +42,6 @@ visitor "CSV":
       if( ctx.STRING() != nil ):                                # if the node contains a STRING:
         x = x[ 1 .. ^2 ]                                        #   remove outside " "
         x = x.replace("\"\"","\"")                              #   replace "" with "
-      elif( test( moneyFormat, ctx.getText().to(cstring) ) ):   # else if the node text is an amount:
-          return parseFloat(x).toJs                             #   return a float
+#      elif( test( moneyFormat, ctx.getText().to(cstring) ) ):   # else if the node text is an amount:
+#          return parseFloat(x).toJs                             #   return a float
       return x.toJs                                             # return a string
