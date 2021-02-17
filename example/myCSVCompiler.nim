@@ -1,14 +1,6 @@
-import breeze, macros
+import json, breeze, macros
 
-proc newIdent*(i: string): NimNode =
-  ## Creates an identifier node from `i`.
-
-  result = newNimNode(nnkIdent)
-  result.ident = toNimIdent(i)
-
-var e = newIdent("f")
-var result = buildMacro:
-  call:
-    e
-
-echo result
+const data = staticRead("example.json")
+static:
+  var x = parseJson(data)
+  echo x["csvFile"][0]["hdr"]

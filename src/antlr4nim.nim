@@ -9,18 +9,31 @@ const data = staticRead(file)
 
 const start {.strdefine.} = ""
 
-macro listener*( grammar: string, body: untyped ) =
-  ## Declares an ANTLR listener block
+const interpreted = 0
+const compiled = 1
+
+var grammar {.compileTime.} : NimNode
+var style {.compileTime.} = interpreted
+var doneEnter {.compileTime.} = false
+var doneExit {.compileTime.} = false
+var doneVisit {.compileTime.} = false
+
+
+macro interpret*( g: string, body: untyped ) =
+  grammar = g
+  style = interpreted
   result = newStmtList(body)
+
+
+proc listener(): NimNode =
+  ## Declares an ANTLR listener block
+  result = newStmtList()
   result.add quote do:
     proc bindMethods( this: JsObject ) =
       when declared( bindEnterMethods ):
         bindEnterMethods( this )
       when declared( bindExitMethods ):
         bindExitMethods( this )
-  #  module.exports.bindMethods = bindMethods
-  #  module.exports.grammar = `grammar`.toJs
-  #  module.exports.type = "listener".toJs
   result.add quote do:
     const jantlr = """
     import """ & `grammar` & """Lexer from "./""" & `grammar` & """Lexer.mjs";
@@ -47,23 +60,19 @@ macro listener*( grammar: string, body: untyped ) =
     proc getListener(): JsObject {.importc, nodecl.}
     proc getWalker(): JsObject {.importc, nodecl.}
     var tree = getTree(cstring(data),cstring(start))
-    var listnr = getListener()
+    var listener = getListener()
     var walker = getWalker()
-    bindMethods( listnr )
-    walker.walk( listnr, tree )
+    bindMethods( listener )
+    walker.walk( listener, tree )
 
 
-
-macro visitor*( grammar: string , body: untyped) =
+proc visitor(): NimNode =
   ## Declares an ANTLR visitor block
-  result = newStmtList(body)
+  result = newStmtList()
   result.add quote do:
     proc bindMethods( this: JsObject ) =
       when declared( bindVisitMethods ):
         bindVisitMethods( this )
-  #  module.exports.bindMethods = bindMethods
-  #  module.exports.grammar = `grammar`.toJs
-  #  module.exports.type = "visitor".toJs
   result.add quote do:
     const jantlr = """
     import """ & `grammar` & """Lexer from "./""" & `grammar` & """Lexer.mjs";
@@ -83,15 +92,15 @@ macro visitor*( grammar: string , body: untyped) =
     }
     """
     {.emit: jantlr.}
-  #  proc getTree(data:cstring,start:cstring): JsObject {.importc, nodecl.}
-  #  proc getVisitor(): JsObject {.importc, nodecl.}
-  #  var tree = getTree(data,start)
-  #  var vistr = getVisitor()
-  #  bindMethods( vistr )
-  #  tree.accept( vistr )
+    proc getTree(data:cstring,start:cstring): JsObject {.importc, nodecl.}
+    proc getVisitor(): JsObject {.importc, nodecl.}
+    var tree = getTree(data,start)
+    var visitor = getVisitor()
+    bindMethods( visitor )
+    tree.accept( visitor )
 
 
-template antlrBlock*( blockName: string, returnType: string, body: untyped) =
+template antlrBlock( blockName: string, returnType: string, tail: NimNode, body: untyped) =
   var bindings = newStmtList()
   result = newStmtList()
   for node in body.children:
@@ -125,25 +134,36 @@ template antlrBlock*( blockName: string, returnType: string, body: untyped) =
             n
           )
         )
-
       else:
         result.add node   ## pass on anything in the block other than a proc
   var procname = "bind" & blockName.capitalizeAscii & "Methods"
   var bindMs = newProc( ident(procname), @[newEmptyNode(),newIdentDefs(ident("this"),ident("JsObject"))], bindings )
   result.add bindMs
+  result.add tail
+  echo repr(result)
 
 
 macro enter*( body: untyped) =
   ## Declares an ANTLR subblock containing "enter" methods
-  antlrBlock("enter", "void", body)
+  doneEnter = true
+  if doneExit:
+    antlrBlock("enter", "void", listener(), body)
+  else:
+    antlrBlock("enter", "void", newEmptyNode(), body)
+
 
 macro exit*( body: untyped) =
   ## Declares an ANTLR subblock containing "exit" methods
-  antlrBlock("exit", "void", body)
+  doneExit = true
+  if doneEnter:
+    antlrBlock("exit", "void", listener(), body)
+  else:
+    antlrBlock("exit", "void", newEmptyNode(), body)
 
 macro visit*( body: untyped) =
   ## Declares an ANTLR subblock containing "visit" methods
-  antlrBlock("visit", "JsObject", body)
+  doneVisit = true
+  antlrBlock("visit", "JsObject", visitor(), body)
 
 
 proc txt*( x: JsObject ): string =

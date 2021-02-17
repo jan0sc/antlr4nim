@@ -1,0 +1,3 @@
+nim js --run -o:myCSVListener.mjs -d:file=/Users/pinney/Documents/GitHub/antlr4nim/example/example.csv -d:start=csvFile myCSVListener.nim
+
+nim js --run -o:myCSVVisitor.mjs -d:file=/Users/pinney/Documents/GitHub/antlr4nim/example/example.csv -d:start=csvFile myCSVVisitor.nim
