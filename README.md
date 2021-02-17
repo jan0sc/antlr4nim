@@ -518,10 +518,12 @@ Here's some further reading that might help:
 ## FAQ
 
 ### Can I get my parser working in the browser?
-Probably, but... you will need to make a big bundle of JS including the ANTLR4 runtime - try with [browserify](http://browserify.org/)? 
-I haven't attempted this yet. Suggestions welcome.
+Probably, but... you will need to make a big bundle of JS including the ANTLR4 runtime - the ANTLR team suggest to use [webpack](https://webpack.js.org/). I haven't attempted this yet. Suggestions welcome.
 
+### What about compilation?
+The ultimate goal for this project is to produce a simple platform for compiler production based on an ANTLR4 grammar. 
 
+At the moment antlr4nim can be used to make JS-hosted interpreters, but all the nice AST manipulations that Nim provides remain off-limits because they can't be used at runtime. I am working on an update that will cleanly separate the parse tree generation from traversal, so that compilation to any Nim target will be possible... soon.
 
 
 ## Credits
