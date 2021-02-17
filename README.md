@@ -1,5 +1,7 @@
 # antlr4nim
- Nim interface to ANTLR4 listener/visitor via jsffi. 
+ Nim interface to ANTLR4 listener/visitor via jsffi.
+ 
+ Current version supports interpreter generation - compiler functionality is in the pipeline.
  
  [API](https://jan0sc.github.io/antlr4nim.html)
 
@@ -17,7 +19,7 @@ You know that the [ANTLR4](https://www.antlr.org/) parser generator makes it pos
 You also know that [Nim](https://nim-lang.org/) is an expressive general-purpose language that
 
 * compiles to efficient C, C++ or JavaScript code.
-* has powerful metaprogramming tools that will make it much easier to write a compiler for your new language.
+* has powerful metaprogramming tools that should *(see FAQ below)* make it much easier to write a compiler for your new language.
 
 You want to use both together? Of course you do. But ANTLR4 has no Nim target :(
 
@@ -521,9 +523,9 @@ Here's some further reading that might help:
 Probably, but... you will need to make a big bundle of JS including the ANTLR4 runtime - the ANTLR team suggest to use [webpack](https://webpack.js.org/). I haven't attempted this yet. Suggestions welcome.
 
 ### What about compilation?
-The ultimate goal for this project is to produce a simple platform for compiler production based on an ANTLR4 grammar. 
+The ultimate goal for this project is to create a simple platform for compiler production based on any ANTLR4 grammar. 
 
-At the moment antlr4nim can be used to make JS-hosted interpreters, but all the nice AST manipulations that Nim provides remain off-limits because they can't be used at runtime. I am working on an update that will cleanly separate the parse tree generation from traversal, so that compilation to any Nim target will be possible... soon.
+At the moment antlr4nim can be used to make JS-hosted interpreters, but all the nice AST tools that Nim provides remain off-limits because they can't be used at runtime. I am working on an update that will cleanly separate the parse tree generation from traversal, so that compilation to any Nim target will be possible... soon.
 
 
 ## Credits
