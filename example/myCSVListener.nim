@@ -1,6 +1,5 @@
 ## antlr4nim listener example
-
-import antlr4nim, jsffi, strutils
+import antlr4nim, strutils
 
 var width = 0
 var finishedHeader = false

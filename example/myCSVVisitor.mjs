@@ -632,14 +632,6 @@ function nimParseBiggestFloat(s_1505076, number_1505078, number_1505078_Idx, sta
   return result_1505081;
 
 }
-if (!Math.trunc) {
-  Math.trunc = function(v) {
-    v = +v;
-    if (!isFinite(v)) return v;
-    return (v - v % 1) || (v < 0 ? -0 : v === 0 ? v : 0);
-  };
-}
-
 var F={procname:"module myCSVVisitor",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVVisitor.nim",line:0};
 framePtr = F;
 framePtr = F.prev;
@@ -3115,11 +3107,11 @@ framePtr = F;
 framePtr = F.prev;
 var F={procname:"module antlr4nim",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
 framePtr = F;
-F.line = 15;
-F.line = 16;
-F.line = 17;
-F.line = 18;
-F.line = 19;
+F.line = 20;
+F.line = 21;
+F.line = 22;
+F.line = 23;
+F.line = 24;
 framePtr = F.prev;
 var F={procname:"module antlr4nim",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
 framePtr = F;
@@ -4356,7 +4348,7 @@ function HEX24_10695023(x_10695025) {
   var F={procname:"antlr4nim.$",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
   BeforeRet: do {
-    F.line = 175;
+    F.line = 182;
     result_10695026 = nimCopy(null, cstrToNimstr((x_10695025)), NTI1188013);
     break BeforeRet;
   } while (false);
@@ -4382,19 +4374,19 @@ function visitRow_10890040(this_10890042, ctx_10890043) {
   return result_10890044;
 
 }
-function txt_10690080(x_10690082) {
-  var result_10690083 = [];
+function txt_10690072(x_10690074) {
+  var result_10690075 = [];
 
   var F={procname:"antlr4nim.txt",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
   BeforeRet: do {
-    F.line = 171;
-    result_10690083 = nimCopy(null, cstrToNimstr((x_10690082.getText())), NTI1188013);
+    F.line = 178;
+    result_10690075 = nimCopy(null, cstrToNimstr((x_10690074.getText())), NTI1188013);
     break BeforeRet;
   } while (false);
   framePtr = F.prev;
 
-  return result_10690083;
+  return result_10690075;
 
 }
 function nsuFindChar(s_10365216, sub_10365217, start_10365218, last_10365219) {
@@ -4791,7 +4783,7 @@ function visitField_10980029(this_10980031, ctx_10980032) {
   framePtr = F;
   BeforeRet: do {
     F.line = 41;
-    var x_10980034 = txt_10690080(ctx_10980032);
+    var x_10980034 = txt_10690072(ctx_10980032);
     if (!((ctx_10980032.STRING() == null))) {
     F.line = 43;
     x_10980034 = nimCopy(null, HEX5BHEX5D_6140068(x_10980034, HEX2EHEX2E_6140001(1, 2)), NTI1188013);
@@ -4881,7 +4873,7 @@ function bindVisitMethods_11005018(this_11005020) {
 function bindMethods_11045026(thisHEX60gensym6_11045028) {
   var F={procname:"myCSVVisitor.bindMethods",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/src/antlr4nim.nim",line:0};
   framePtr = F;
-    F.line = 75;
+    F.line = 82;
     bindVisitMethods_11005018(thisHEX60gensym6_11045028);
   framePtr = F.prev;
 
@@ -4889,7 +4881,7 @@ function bindMethods_11045026(thisHEX60gensym6_11045028) {
 }
 var F={procname:"module myCSVVisitor",prev:framePtr,filename:"/Users/pinney/Documents/GitHub/antlr4nim/example/myCSVVisitor.nim",line:0};
 framePtr = F;
-F.line = 94;
+F.line = 101;
     import CSVLexer from "./CSVLexer.mjs";
     import CSVParser from "./CSVParser.mjs";
     import antlr4 from 'antlr4';
@@ -4906,11 +4898,11 @@ F.line = 94;
       return new CSVVisitor();
     }
     
-F.line = 97;
+F.line = 104;
 var treeHEX60gensym7_11045221 = [getTree("\"REVIEW_DATE\",\"AUTHOR\",\"ISBN\",\"DISCOUNTED_PRICE\"\n\"1985/01/21\",\"Douglas Adams\",0345391802,5.95\n\"1990/01/12\",\"Douglas Hofstadter\",0465026567,9.95\n\"1998/07/15\",\"Timothy \"\"The Parser\"\" Campbell\",0968411304,18.99\n\"1999/12/03\",\"Richard Friedman\",0060630353,5.95\n\"2001/09/19\",\"Karen Armstrong\",0345384563,9.95\n\"2002/06/23\",\"David Jones\",0198504691,9.95\n\"2002/06/23\",\"Julian Jaynes\",0618057072,12.50\n\"2003/09/30\",\"Scott Adams\",0740721909,4.95\n\"2004/10/04\",\"Benjamin Radcliff\",0804818088,4.95\n\"2004/10/04\",\"Randel Helms\",0879755725,4.50\n", "csvFile")];
-F.line = 98;
+F.line = 105;
 var visitorHEX60gensym7_11045222 = [getVisitor()];
-F.line = 99;
+F.line = 106;
 bindMethods_11045026(visitorHEX60gensym7_11045222[0]);
 treeHEX60gensym7_11045221[0].accept((visitorHEX60gensym7_11045222[0]));
 framePtr = F.prev;

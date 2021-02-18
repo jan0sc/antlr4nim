@@ -1,0 +1,8 @@
+# a simple example in Ax
+
+factorial( n ) =
+| 1 if n = 0 or n = 1
+| n * factorial[ n - 1 ] if n > 1
+| undefined otherwise
+
+main( a ) = factorial( a )
