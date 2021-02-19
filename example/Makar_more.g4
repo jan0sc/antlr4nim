@@ -1,6 +1,6 @@
-grammar Ax ;
+grammar Makar ;
 
-axFile : definition+ ;
+makarFile : definition+ ;
 definition : exportAnn? sym subscripts? params? '=' result ;
 exportAnn : ':' ;
 

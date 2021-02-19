@@ -1,4 +1,4 @@
-# simple example in Ax
+# simple example in Makar
 
 # defines an infinite series
 fib[ n in N ] =

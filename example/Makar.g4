@@ -1,6 +1,6 @@
-grammar Ax ;
+grammar Makar ;
 
-axFile : definition+ ;
+makarFile : definition+ ;
 
 definition : sym params? '=' result ;
 
@@ -34,7 +34,7 @@ expr : value         # Atom
      ;
 
 call : sym args ;
-args : '[' ( expr ',' )* expr ']' ;
+args : '(' ( expr ',' )* expr ')' ;
 
 value : sym | number | UNDEFINED ;
 

@@ -1,13 +1,12 @@
 ## roadmap
 
-DONE  run toJson from compiler as external process (staticExec)
+DONE  run toJson from nimscript as external process (staticExec)
 
-implement listener
+implement CSV listener (interpret)
+implement CSV visitor (interpret)
+implement Fonc visitor (compile)
 
-implement visitor
+allow preprocessing (string) and postprocessing (json) procs ( e.g. dent/undent ) in nimscript before compilation
 
-allow preprocess(string) and postprocess(json) procs ( e.g. dent/undent ) before tree traversal
-
-visitor procs can have specified return type
-
-set a default return type from visitor: macro
+interpret mode => visitor proc returns object
+compile mode => visitor proc returns NimNode?

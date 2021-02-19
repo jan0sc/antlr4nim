@@ -1,13 +1,13 @@
 ## antlr4nim visitor example
 
 import  antlr4nim, jsffi, jsre, strutils, strformat, algorithm
-#import times
-#let dateFormat = initTimeFormat("yyyy/MM/dd")
+import times
+let dateFormat = initTimeFormat("yyyy/MM/dd")
 let moneyFormat = newRegExp(r"^\d+\.\d\d$", r"")
 
 type Book = object
   author, isbn: string
-#  reviewDate: DateTime
+  reviewDate: DateTime
   discountedPrice: float
 
 var library = newSeq[Book](0)
@@ -18,26 +18,25 @@ proc addToLibrary( newBooks: seq[Book] ) =
   for b in newBooks.sortedByIt(it.isbn):
     echo &"{b.isbn} ({b.author})"
 
-
 interpret "CSV":
   visit:
     proc csvFile =
       var books = newSeq[Book](0)
-      for x in ctx.visitChildren(ctx):         # get the result from each child node
+      for x in visitChildren(ctx):               # get the result from each child node
         if( x != nil ):                         # exclude any rows that return nil
           books &= x.Book
       addToLibrary( books )
     proc hdr =
       return nil                                # the header row returns nil
-    proc row: Book =
+    proc row =
       var b = Book(                             # construct a new Book object for this row
-        author: visit(ctx.field(1)),  # get the result from a specific node
-        isbn: visit(ctx.field(2)),
-  #    reviewDate: parse( visit(ctx.field(0)), dateFormat ),
-        discountedPrice: parseFloat( visit(ctx.field(3)) )
+        author: visit( ctx.field(1) ).string,  # get the result from a specific node
+        isbn: visit( ctx.field(2) ).string,
+        reviewDate: parse( visit( ctx.field(0) ).string, dateFormat ),
+        discountedPrice: parseFloat( visit( ctx.field(3) ).string )
       )
       return b                                  # return the Book
-    proc field: string =
+    proc field =
       var x = ctx.txt
       if( ctx.STRING != nil ):                                # if the node contains a STRING:
         x = x[ 1 .. ^2 ]                                        #   remove outside " "
