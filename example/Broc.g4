@@ -1,6 +1,6 @@
-grammar Makar ;
+grammar Broc ;
 
-makarFile : definition+ ;
+brocFile : definition+ ;
 
 definition : sym params? '=' result ;
 
@@ -11,11 +11,11 @@ result : expr
        ;
 
 ifClause : (ifx)* ifx otherwise ;
-ifx : '|' expr 'if' cond ;
+ifx : '|' expr ' if ' cond ;
 otherwise : '|' expr 'otherwise' ;
 
-cond : cond 'or' cond   # Logical
-     | cond 'and' cond  # Logical
+cond : cond ' or ' cond   # Logical
+     | cond ' and ' cond  # Logical
      | expr '=' expr    # Compare
      | expr '/=' expr   # Compare
      | expr '<' expr    # Compare
@@ -27,10 +27,8 @@ cond : cond 'or' cond   # Logical
 expr : value         # Atom
      | call          # Atom
      | '(' expr ')'  # Paren
-     | expr '*' expr # Binary
-     | expr '/' expr # Binary
-     | expr '+' expr # Binary
-     | expr '-' expr # Binary
+     | expr ('*'|'/') expr # Binary
+     | expr ('+'|'-') expr # Binary
      ;
 
 call : sym args ;
@@ -44,7 +42,7 @@ number : DIGIT+ ;
 UNDEFINED : 'undefined' ;
 fragment CHAR : [A-Za-z] ;
 
-WORD : CHAR+ ;
+WORD : CHAR (CHAR|DIGIT)* ;
 DIGIT : [0-9] ;
 
 WS : [ \t\r\n] -> skip ;

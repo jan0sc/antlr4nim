@@ -1,9 +1,0 @@
-# simple example in Makar
-
-# defines an infinite series
-fib[ n in N ] =
-  | 1 if n = 1 or n = 2
-  | fib[ n - 1 ] + fib[ n - 2 ] otherwise
-
-# outputs a finite series as a tuple
-:data = ( fib[ n ] : n in 1..10  )
